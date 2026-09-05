@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PingBack AI - Opportunity Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>PingBack AI</h1>
+    <p>Screenshot-to-Action Opportunity Tracker</p>
+  </header>
+
+  <main>
+    <!-- Dashboard summary cards -->
+    <section class="stats-grid" id="statsGrid">
+      <div class="stat-card"><span id="statTotal">0</span><label>Total</label></div>
+      <div class="stat-card"><span id="statDue">0</span><label>Due this week</label></div>
+      <div class="stat-card"><span id="statCompleted">0</span><label>Completed</label></div>
+      <div class="stat-card"><span id="statPending">0</span><label>Pending</label></div>
+    </section>
+
+    <!-- Upload + OCR -->
+    <section class="card">
+      <h2>1. Upload a screenshot</h2>
+      <input type="file" id="screenshotInput" accept="image/*" />
+      <div id="ocrStatus"></div>
+      <img id="previewImg" alt="Preview" style="display:none;max-width:280px;margin-top:10px;border-radius:8px;" />
+    </section>
+
+    <!-- Editable form -->
+    <section class="card">
+      <h2>2. Verify and save details</h2>
+      <form id="opportunityForm">
+        <input type="hidden" id="opportunityId" />
+        <label>Title
+          <input type="text" id="title" required />
+        </label>
+        <label>Extracted text (auto-filled by OCR, editable)
+          <textarea id="extractedText" rows="3"></textarea>
+        </label>
+        <div class="form-row">
+          <label>Category
+            <select id="category">
+              <option>Internship</option>
+              <option>Workshop</option>
+              <option>Hackathon</option>
+              <option>Scholarship</option>
+              <option>Assignment</option>
+              <option>Event</option>
+              <option>Competition</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Source platform
+            <select id="sourcePlatform">
+              <option>WhatsApp</option>
+              <option>LinkedIn</option>
+              <option>Instagram</option>
+              <option>Email</option>
+              <option>Telegram</option>
+              <option>Poster</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Application link
+            <input type="url" id="applicationLink" placeholder="https://" />
+          </label>
+          <label>Priority
+            <select id="priority">
+              <option>Low</option>
+              <option selected>Medium</option>
+              <option>High</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Deadline
+            <input type="date" id="deadline" />
+          </label>
+          <label>Reminder date
+            <input type="date" id="reminderDate" />
+          </label>
+        </div>
+        <label>Next action
+          <input type="text" id="nextAction" placeholder="e.g. Submit resume" />
+        </label>
+        <label>Status
+          <select id="status">
+            <option>Saved</option>
+            <option>In Progress</option>
+            <option>Applied/Registered</option>
+            <option>Completed</option>
+            <option>Missed</option>
+            <option>Archived</option>
+          </select>
+        </label>
+        <label>Notes
+          <textarea id="notes" rows="2"></textarea>
+        </label>
+        <div class="form-actions">
+          <button type="submit" id="saveBtn">Save opportunity</button>
+          <button type="button" id="cancelEditBtn" style="display:none;">Cancel edit</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Search and filters -->
+    <section class="card">
+      <h2>3. Your opportunities</h2>
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Search by title..." />
+        <select id="filterCategory">
+          <option value="">All categories</option>
+          <option>Internship</option>
+          <option>Workshop</option>
+          <option>Hackathon</option>
+          <option>Scholarship</option>
+          <option>Assignment</option>
+          <option>Event</option>
+          <option>Competition</option>
+          <option>Other</option>
+        </select>
+        <select id="filterStatus">
+          <option value="">All statuses</option>
+          <option>Saved</option>
+          <option>In Progress</option>
+          <option>Applied/Registered</option>
+          <option>Completed</option>
+          <option>Missed</option>
+          <option>Archived</option>
+        </select>
+      </div>
+      <div id="cardsContainer" class="cards-container"></div>
+    </section>
+
+    <!-- Charts -->
+    <section class="card">
+      <h2>4. Dashboard charts</h2>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <p class="chart-label">By category</p>
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <p class="chart-label">By status</p>
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
